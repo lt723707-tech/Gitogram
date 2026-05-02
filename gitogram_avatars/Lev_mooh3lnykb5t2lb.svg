@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <!-- Background Gradient -->
+    <defs>
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4facfe" />
+            <stop offset="100%" stop-color="#00f2fe" />
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000000" flood-opacity="0.3"/>
+        </filter>
+    </defs>
+
+    <!-- App Icon Shape -->
+    <rect width="512" height="512" rx="110" fill="url(#bgGrad)" />
+
+    <!-- Chat Bubble Shape -->
+    <path d="M120 256C120 176.47 184.47 112 264 112C343.53 112 408 176.47 408 256C408 335.53 343.53 400 264 400C240.55 400 218.42 394.39 198.88 384.53L128 408L140.24 340.7C127.35 316.59 120 287.35 120 256Z" fill="#ffffff" filter="url(#shadow)" />
+
+    <!-- Lock / Secure symbol inside chat bubble -->
+    <path d="M264 176C237.5 176 216 197.5 216 224V240H208C199.16 240 192 247.16 192 256V320C192 328.84 199.16 336 208 336H320C328.84 336 336 328.84 336 320V256C336 247.16 328.84 240 320 240H312V224C312 197.5 290.5 176 264 176ZM264 196C279.46 196 292 208.54 292 224V240H236V224C236 208.54 248.54 196 264 196ZM264 276C270.63 276 276 281.37 276 288C276 294.63 270.63 300 264 300C257.37 300 252 294.63 252 288C252 281.37 257.37 276 264 276Z" fill="#4facfe" />
+</svg>
