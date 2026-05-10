@@ -133,6 +133,10 @@
             font-size: var(--fs);
         }
 
+        :root {
+            --kb-offset: 0px;
+        }
+
         /* ══════════════════════════════════════════════════════════
            ЭКРАН ПРИВЕТСТВИЯ / ЛОГИН
            ══════════════════════════════════════════════════════════ */
@@ -320,6 +324,7 @@
 
         .app.active {
             display: flex;
+            height: 100dvh;
         }
 
         /* ═══ БОКОВАЯ ПАНЕЛЬ (Sidebar) ═══ */
@@ -1222,6 +1227,8 @@
             display: flex;
             align-items: flex-end;
             gap: 8px;
+            transform: translateY(calc(var(--kb-offset) * -1));
+            transition: transform .18s ease-out;
         }
 
         .input-bar {
@@ -1586,6 +1593,7 @@
         .settings-pane::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
         .settings-section { margin-bottom: 24px; }
+        .settings-section.editor-host { position: relative; }
 
         .settings-section h4 {
             font-size: var(--fs-sm);
@@ -1752,71 +1760,6 @@
         .toast-notify .avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
         .toast-notify .content { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .toast-notify .name { font-weight: 600; margin-right: 6px; }
-
-        /* Emoji Panel */
-        .emoji-panel {
-            position: absolute;
-            bottom: 70px;
-            left: 15px;
-            width: 320px;
-            height: 400px;
-            background: var(--bg-mid);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            display: none;
-            flex-direction: column;
-            z-index: 1000;
-            overflow: hidden;
-            animation: slideUp 0.2s ease-out;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .emoji-panel.active { display: flex; }
-        .emoji-tabs {
-            display: flex;
-            padding: 8px;
-            border-bottom: 1px solid var(--border);
-            overflow-x: auto;
-            scrollbar-width: none;
-            background: var(--bg-dark);
-        }
-        .emoji-tabs::-webkit-scrollbar { display: none; }
-        .emoji-tab {
-            min-width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 10px;
-            font-size: 20px;
-            transition: background 0.2s;
-        }
-        .emoji-tab:hover { background: var(--bg-hover); }
-        .emoji-tab.active { background: var(--accent); color: #fff; }
-        .emoji-list {
-            flex: 1;
-            padding: 10px;
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            overflow-y: auto;
-            overflow-y: overlay;
-        }
-        .emoji-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 38px;
-            cursor: pointer;
-            font-size: 24px;
-            border-radius: 8px;
-            transition: transform 0.1s;
-        }
-        .emoji-item:hover { background: var(--bg-hover); transform: scale(1.2); }
 
         /* Theme Manager */
         .theme-list {
@@ -1997,6 +1940,22 @@
             .app.chat-open .input-area {
                 opacity: 1;
             }
+
+            #modalSettings {
+                align-items: stretch;
+                justify-content: stretch;
+            }
+            #modalSettings .modal {
+                width: 100vw;
+                max-width: 100vw;
+                height: 100dvh;
+                max-height: 100dvh;
+                border-radius: 0;
+                padding: 18px 14px;
+            }
+            #modalSettings .settings-pane {
+                max-height: calc(100dvh - 180px);
+            }
         }
 
         .back-btn { display: none; }
@@ -2044,13 +2003,13 @@
                     <div class="sidebar-user" id="sidebarUser"></div>
                 </div>
                 <div class="sidebar-actions">
-                    <button class="icon-btn" id="btnAddChat" title="Новый чат">
+                    <button class="icon-btn" id="btnAddChat" data-tt="tt_new_chat">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
                             <line x1="12" y1="5" x2="12" y2="19" />
                             <line x1="5" y1="12" x2="19" y2="12" />
                         </svg>
                     </button>
-                    <button class="icon-btn" id="btnSettings" title="Настройки">
+                    <button class="icon-btn" id="btnSettings" data-tt="tt_settings">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="3" />
                             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -2074,7 +2033,11 @@
 
             <!-- Заглушка, когда чат не выбран -->
             <div class="no-chat" id="noChat">
-                <div class="big-icon">💬</div>
+                <div class="big-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
                 <h3 data-t="select_chat"></h3>
                 <p data-t="each_chat_key"></p>
             </div>
@@ -2094,7 +2057,7 @@
                         </div>
                     </div>
                     <div class="chat-header-actions">
-                        <button class="icon-btn" id="btnInviteChat" title="Пригласить в чат">
+                        <button class="icon-btn" id="btnInviteChat" data-tt="tt_invite_chat">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                                 <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                 <circle cx="8.5" cy="7" r="4" />
@@ -2102,13 +2065,13 @@
                                 <line x1="23" y1="11" x2="17" y2="11" />
                             </svg>
                         </button>
-                        <button class="icon-btn" id="btnShowKey" title="Показать ключ">
+                        <button class="icon-btn" id="btnShowKey" data-tt="tt_show_key">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                                 <rect x="3" y="11" width="18" height="11" rx="2" />
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                             </svg>
                         </button>
-                        <button class="icon-btn" id="btnDeleteChat" title="Удалить чат">
+                        <button class="icon-btn" id="btnDeleteChat" data-tt="tt_delete_chat">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                                 <polyline points="3 6 5 6 21 6" />
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
@@ -2122,7 +2085,7 @@
 
                 <!-- Оверлеи для файлов -->
                 <div class="drag-overlay" id="dragOverlay">
-                    <div class="drag-icon">📎</div>
+                    <div class="drag-icon">+</div>
                     <p data-t="drop_files"></p>
                 </div>
                 <div class="upload-overlay" id="uploadOverlay">
@@ -2133,7 +2096,7 @@
 
                 <!-- Панель ответа/действий -->
                 <div class="action-bar" id="actionBar">
-                    <div class="action-bar-icon" id="actionIcon">↩️</div>
+                    <div class="action-bar-icon" id="actionIcon">RE</div>
                     <div class="action-bar-content">
                         <div class="action-bar-title" id="actionTitle"></div>
                         <div class="action-bar-text" id="actionText"></div>
@@ -2145,36 +2108,15 @@
                 <div class="file-preview-bar" id="filePreviewBar"></div>
 
                 <!-- Панель ввода -->
-                <div class="emoji-panel" id="emojiPanel">
-                    <div class="emoji-tabs">
-                        <div class="emoji-tab active" data-cat="smileys">😀</div>
-                        <div class="emoji-tab" data-cat="animals">🐶</div>
-                        <div class="emoji-tab" data-cat="food">🍎</div>
-                        <div class="emoji-tab" data-cat="activities">⚽</div>
-                        <div class="emoji-tab" data-cat="travel">🚗</div>
-                        <div class="emoji-tab" data-cat="objects">💡</div>
-                        <div class="emoji-tab" data-cat="symbols">🔣</div>
-                        <div class="emoji-tab" data-cat="flags">🚩</div>
-                    </div>
-                    <div class="emoji-list" id="emojiList"></div>
-                </div>
                 <div class="input-area" id="inputArea">
                     <div class="input-bar">
-                        <button class="attach-btn" id="attachBtn" title="Прикрепить файл">
+                        <button class="attach-btn" id="attachBtn" data-tt="tt_attach_file">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
                             </svg>
                         </button>
-                        <button class="attach-btn" id="emojiBtn" title="Эмодзи" style="margin-left: 0;">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
-                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
-                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
-                            </svg>
-                        </button>
                         <textarea class="msg-input" id="msgInput" rows="1" data-tp="message"></textarea>
-                        <button class="icon-btn" id="voiceBtn" title="Голосовое сообщение" style="position:absolute;right:44px;bottom:6px;width:32px;height:32px;color:var(--text-dim)">
+                        <button class="icon-btn" id="voiceBtn" data-tt="tt_voice_message" style="position:absolute;right:44px;bottom:6px;width:32px;height:32px;color:var(--text-dim)">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
                                 <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
@@ -2270,7 +2212,13 @@
     <!-- Лайтбокс для просмотра фото -->
     <div class="lightbox" id="lightbox">
         <button class="lb-btn" id="lightboxClose">✕</button>
-        <a class="lb-btn" id="lightboxDl" download>⬇</a>
+        <a class="lb-btn" id="lightboxDl" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
+                <path d="M12 3v12"></path>
+                <path d="m7 10 5 5 5-5"></path>
+                <path d="M5 21h14"></path>
+            </svg>
+        </a>
         <div id="lightboxContent"></div>
     </div>
 
@@ -2278,7 +2226,7 @@
     <!-- Новый чат -->
     <div class="modal-overlay" id="modalAddChat">
         <div class="modal">
-            <h3>💬 <span data-t="new_chat"></span></h3>
+            <h3><span data-t="new_chat"></span></h3>
             
             <div id="addChatTabs" style="display:flex;gap:10px;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:10px">
                 <div class="theme-opt active" id="tabCreateChat" style="padding:6px 12px;font-size:13px" data-t="create_chat"></div>
@@ -2291,15 +2239,15 @@
                     <input type="text" id="newChatName">
                 </div>
                 <div class="form-group">
-                    <label>🔑 <span data-t="enc_key"></span></label>
+                    <label><span data-t="enc_key"></span></label>
                     <input type="text" id="newChatKey">
-                    <button class="gen-key-btn" id="btnGenKey">🎲 Сгенерировать</button>
+                    <button class="gen-key-btn" id="btnGenKey" data-t="generate"></button>
                 </div>
             </div>
 
             <div id="paneImportChat" style="display:none">
                 <div class="form-group">
-                    <label>JSON Конфиг</label>
+                    <label data-t="json_config"></label>
                     <textarea id="importChatConfig" style="width:100%;height:80px;background:var(--bg-dark);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:10px;font-family:monospace;font-size:12px;resize:none" data-tp="chat_config_placeholder"></textarea>
                 </div>
             </div>
@@ -2314,7 +2262,7 @@
     <!-- Просмотр ключа -->
     <div class="modal-overlay" id="modalShowKey">
         <div class="modal">
-            <h3>🔑 <span data-t="chat_data"></span></h3>
+            <h3><span data-t="chat_data"></span></h3>
             <div class="form-group">
                 <label data-t="chat_name"></label>
                 <p id="keyName" style="font-size:15px"></p>
@@ -2324,7 +2272,7 @@
                 <div class="key-box" id="keyValue"></div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-secondary" id="btnCopyKey" data-t="copy_key_btn">📋</button>
+                <button class="btn btn-secondary" id="btnCopyKey" data-t="copy_key_btn"></button>
                 <button class="btn btn-primary" style="width:auto" data-close="modalShowKey" data-t="close"></button>
             </div>
         </div>
@@ -2333,7 +2281,7 @@
     <!-- Пересылка -->
     <div class="modal-overlay" id="modalForward">
         <div class="modal">
-            <h3>↪️ <span data-t="forward_to"></span></h3>
+            <h3><span data-t="forward_to"></span></h3>
             <div id="forwardList"></div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" data-close="modalForward" data-t="cancel"></button>
@@ -2345,7 +2293,7 @@
     <!-- Модалка управления папками -->
     <div class="modal-overlay" id="modalAddFolder">
         <div class="modal">
-            <h3>📂 <span data-t="new_folder"></span></h3>
+            <h3><span data-t="new_folder"></span></h3>
             <div class="form-group">
                 <label data-t="folder_name"></label>
                 <input type="text" id="newFolderName" data-tp="folder_placeholder">
@@ -2360,7 +2308,7 @@
     <!-- Модалка выбора папки для чата -->
     <div class="modal-overlay" id="modalAssignFolder">
         <div class="modal">
-            <h3>📂 <span data-t="move_to_folder"></span></h3>
+            <h3><span data-t="move_to_folder"></span></h3>
             <div id="assignFolderList" style="display:flex;flex-direction:column;gap:8px;margin-top:10px"></div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" data-close="modalAssignFolder" data-t="cancel"></button>
@@ -2370,7 +2318,7 @@
 
     <div class="modal-overlay" id="modalRename">
         <div class="modal">
-            <h3>✏️ <span data-t="rename_chat"></span></h3>
+            <h3><span data-t="rename_chat"></span></h3>
             <div class="form-group">
                 <label data-t="new_name"></label>
                 <input type="text" id="renameInput">
@@ -2385,7 +2333,7 @@
     <!-- Настройки -->
     <div class="modal-overlay" id="modalSettings">
         <div class="modal">
-            <h3>⚙️ <span data-t="settings"></span></h3>
+            <h3><span data-t="settings"></span></h3>
 
             <div class="settings-tabs" id="settingsTabs">
                 <div class="settings-tab active" data-tab="general" data-t="tab_general"></div>
@@ -2423,13 +2371,10 @@
                         <div class="toggle on" id="toggleEnterSend"></div>
                     </div>
                 </div>
-                <div class="settings-section">
+                <div class="settings-section editor-host">
                     <h4 data-t="language"></h4>
                     <div class="setting-row">
-                        <div class="theme-picker" id="langPicker">
-                            <div class="theme-opt" data-lng="ru">🇷🇺 RU</div>
-                            <div class="theme-opt" data-lng="en">🇬🇧 EN</div>
-                        </div>
+                        <div class="theme-picker" id="langPicker"></div>
                     </div>
                 </div>
             </div>
@@ -2437,17 +2382,28 @@
             <!-- TAB: APPEARANCE -->
             <div class="settings-pane" id="pane_appearance">
                 <div id="appearance_main">
-                    <div class="settings-section">
+                    <div class="settings-section editor-host">
                         <h4 data-t="appearance"></h4>
                         <div class="setting-row" style="cursor:pointer; padding: 10px; background: var(--bg-dark); border-radius: 12px;" onclick="app.openThemes()">
                             <div style="display:flex; align-items:center; gap:12px">
-                                <span style="font-size:20px">🎨</span>
+                                <span style="font-size:20px">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px">
+                                        <path d="M12 22a10 10 0 1 1 10-10 3 3 0 0 1-3 3h-2a2 2 0 0 0-2 2 2 2 0 0 0 2 2 3 3 0 0 1 3 3"></path>
+                                        <circle cx="7.5" cy="10.5" r="1"></circle>
+                                        <circle cx="12" cy="7.5" r="1"></circle>
+                                        <circle cx="16.5" cy="10.5" r="1"></circle>
+                                    </svg>
+                                </span>
                                 <div style="display:flex; flex-direction:column">
                                     <span data-t="themes" style="font-weight:600"></span>
                                     <span id="curThemeName" style="font-size:11px; color:var(--text-dim)"></span>
                                 </div>
                             </div>
-                            <span style="color:var(--text-dim)">❯</span>
+                            <span style="color:var(--text-dim)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </span>
                         </div>
                         <div class="setting-row" style="margin-top:15px">
                             <span data-t="accent_color"></span>
@@ -2470,14 +2426,19 @@
 
                 <div id="appearance_themes" class="sub-pane">
                     <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px">
-                        <button class="icon-btn" onclick="app.closeThemes()" style="width:30px; height:30px">❮</button>
+                        <button class="icon-btn" onclick="app.closeThemes()" style="width:30px; height:30px">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
                         <h4 data-t="themes" style="margin:0"></h4>
                     </div>
                     
                     <div class="theme-list" id="themeManagerList"></div>
 
-                    <div style="margin-top: 15px; padding: 0 5px;">
-                        <button class="btn btn-primary" style="width:100%" onclick="$('themeInput').click()" data-t="import_theme"></button>
+                    <div class="setting-row" style="margin: 12px 5px 0 5px;">
+                        <span data-t="theme_use_settings_accent"></span>
+                        <div class="toggle" id="toggleThemeAccentFromSettings"></div>
                     </div>
                     
                     <div id="themeDetails" style="display:none">
@@ -2489,7 +2450,7 @@
                         <div class="theme-preview-window" id="themePreviewWin">
                             <div class="preview-header">
                                 <div class="preview-avatar" style="width:14px;height:14px"></div>
-                                <span style="flex:1">KiberCHAT</span>
+                                <span style="flex:1" data-t="theme_preview_chat_name"></span>
                             </div>
                             <div class="preview-body">
                                 <div class="preview-sidebar">
@@ -2514,8 +2475,8 @@
                                     </div>
                                 </div>
                                 <div class="preview-chat">
-                                     <div class="preview-bubble in" id="previewMsg1">Привет! Это Gitogram.</div>
-                                     <div class="preview-bubble out" id="previewMsg2">Вау, крутая тема! 🔥</div>
+                                     <div class="preview-bubble in" id="previewMsg1" data-t="preview_msg_1"></div>
+                                     <div class="preview-bubble out" id="previewMsg2" data-t="preview_msg_2"></div>
                                      <div class="preview-input">
                                         <div class="preview-input-line"></div>
                                         <div class="preview-send"></div>
@@ -2524,11 +2485,7 @@
                             </div>
                         </div>
 
-                        <div style="margin-top:15px">
-                            <button class="btn btn-danger" style="width:100%" id="btnDeleteCustomTheme" data-t="delete_theme"></button>
-                        </div>
                     </div>
-                    <input type="file" id="themeInput" style="display:none" accept=".ggtheme,application/json">
                 </div>
             </div>
 
@@ -2588,6 +2545,7 @@
                 chat_name: 'Название чата',
                 enc_key: 'Ключ шифрования',
                 copy_key_btn: 'Копировать ключ',
+                generate: 'Сгенерировать',
                 cancel: 'Отмена',
                 create: 'Создать',
                 import: 'Импортировать',
@@ -2620,6 +2578,7 @@
                 delete: 'Удалить',
                 message: 'Сообщение...',
                 caption: 'Подпись...',
+                json_config: 'JSON конфиг',
                 uploading: 'Загрузка...',
                 connected: 'подключено',
                 error: 'ошибка',
@@ -2638,7 +2597,15 @@
                 copied: 'Скопировано!',
                 settings_saved: 'Сохранено ✓',
                 preview_msg_1: 'Привет! Это Gitogram.',
-                preview_msg_2: 'Вау, крутая тема! 🔥',
+                preview_msg_2: 'Вау, крутая тема!',
+                theme_preview_chat_name: 'Gitogram',
+                tt_new_chat: 'Новый чат',
+                tt_settings: 'Настройки',
+                tt_invite_chat: 'Пригласить в чат',
+                tt_show_key: 'Показать ключ',
+                tt_delete_chat: 'Удалить чат',
+                tt_attach_file: 'Прикрепить файл',
+                tt_voice_message: 'Голосовое сообщение',
                 send_error: 'Ошибка отправки',
                 upload_error: 'Ошибка загрузки',
                 file_too_big: 'Файл слишком большой',
@@ -2658,13 +2625,13 @@
                 notif_not_supported: 'Не поддерживается',
                 sound_notify: 'Звук уведомлений',
                 in_app_notify: 'Всплывающие сообщения',
-                import_theme: 'Импорт темы',
                 themes: 'Темы',
                 theme_details: 'Детали темы',
                 author: 'Автор',
-                delete_theme: 'Удалить тему',
                 preview: 'Предпросмотр',
-                back: 'Назад'
+                back: 'Назад',
+                theme_use_settings_accent: 'Брать акцент из настроек'
+                
             },
             en: {
                 subtitle: 'Encrypted messenger via GitHub',
@@ -2703,6 +2670,7 @@
                 chat_name: 'Chat name',
                 enc_key: 'Encryption key',
                 copy_key_btn: 'Copy key',
+                generate: 'Generate',
                 cancel: 'Cancel',
                 create: 'Create',
                 import: 'Import',
@@ -2731,6 +2699,7 @@
                 delete: 'Delete',
                 message: 'Message...',
                 caption: 'Caption...',
+                json_config: 'JSON config',
                 uploading: 'Uploading...',
                 connected: 'connected',
                 error: 'error',
@@ -2749,7 +2718,15 @@
                 copied: 'Copied!',
                 settings_saved: 'Saved ✓',
                 preview_msg_1: 'Hello! This is Gitogram.',
-                preview_msg_2: 'Wow, cool theme! 🔥',
+                preview_msg_2: 'Wow, cool theme!',
+                theme_preview_chat_name: 'Gitogram',
+                tt_new_chat: 'New chat',
+                tt_settings: 'Settings',
+                tt_invite_chat: 'Invite to chat',
+                tt_show_key: 'Show key',
+                tt_delete_chat: 'Delete chat',
+                tt_attach_file: 'Attach file',
+                tt_voice_message: 'Voice message',
                 send_error: 'Send error',
                 upload_error: 'Upload error',
                 file_too_big: 'File too big',
@@ -2769,13 +2746,13 @@
                 notif_not_supported: 'Not supported',
                 sound_notify: 'Notification sound',
                 in_app_notify: 'In-app notifications',
-                import_theme: 'Import Theme',
                 themes: 'Themes',
                 theme_details: 'Theme Details',
                 author: 'Author',
-                delete_theme: 'Delete Theme',
                 preview: 'Preview',
-                back: 'Back'
+                back: 'Back',
+                theme_use_settings_accent: 'Use settings accent'
+                
             }
         };
 
@@ -2788,6 +2765,17 @@
         };
 
         const linkify = t => {
+            const decodeHtml = (s) => {
+                const ta = document.createElement('textarea');
+                let cur = s;
+                for (let i = 0; i < 3; i++) {
+                    ta.innerHTML = cur;
+                    const next = ta.value;
+                    if (next === cur) break;
+                    cur = next;
+                }
+                return cur;
+            };
             // 1. Инлайн код: `текст`
             let res = t.replace(/`(.*?)`/g, '<code>$1</code>');
             
@@ -2803,9 +2791,30 @@
             // 3. Инлайн-импорт чата
             res = res.replace(/\[([^\]]+)\]\(gitogram:addchat(\{(?:[^{}]|(?:\{[^{}]*\}))*\})\)/g, (m, txt, json) => {
                 try {
-                    const cleanJson = JSON.parse(json);
+                    const cleanJson = JSON.parse(decodeHtml(json));
                     const safeStr = btoa(unescape(encodeURIComponent(JSON.stringify(cleanJson))));
                     links.push(`<button class="inline-import-btn" onclick="app.handleTextImport('${safeStr}')">${txt}</button>`);
+                    return `__LINK_${links.length - 1}__`;
+                } catch (e) { return m; }
+            });
+
+            // 3.1 Обычная команда без markdown-обёртки
+            res = res.replace(/gitogram:addchat(\{(?:[^{}]|(?:\{[^{}]*\}))*\})/g, (m, json) => {
+                try {
+                    const cleanJson = JSON.parse(decodeHtml(json));
+                    const safeStr = btoa(unescape(encodeURIComponent(JSON.stringify(cleanJson))));
+                    const chatName = (cleanJson.chat && cleanJson.chat.name) ? cleanJson.chat.name : t('new_chat');
+                    links.push(`<button class="inline-import-btn" onclick="app.handleTextImport('${safeStr}')">${t('import_chat')}: ${esc(chatName)}</button>`);
+                    return `__LINK_${links.length - 1}__`;
+                } catch (e) { return m; }
+            });
+            // 3.2 Fallback для HTML-экранированного JSON без гарантии баланса скобок
+            res = res.replace(/gitogram:addchat(\{[^]*?\}\})/g, (m, json) => {
+                try {
+                    const cleanJson = JSON.parse(decodeHtml(json));
+                    const safeStr = btoa(unescape(encodeURIComponent(JSON.stringify(cleanJson))));
+                    const chatName = (cleanJson.chat && cleanJson.chat.name) ? cleanJson.chat.name : t('new_chat');
+                    links.push(`<button class="inline-import-btn" onclick="app.handleTextImport('${safeStr}')">${t('import_chat')}: ${esc(chatName)}</button>`);
                     return `__LINK_${links.length - 1}__`;
                 } catch (e) { return m; }
             });
@@ -2925,6 +2934,7 @@
          */
         const EXT = {
             images: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'],
+            displayImages: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'],
             videos: ['mp4', 'webm', 'mov', 'avi', 'mkv'],
             audios: ['mp3', 'ogg', 'wav', 'flac', 'aac', 'm4a'],
             _ext(n) {
@@ -2933,13 +2943,14 @@
                 return p.length > 1 ? p.pop().toLowerCase() : '';
             },
             isImage(n) { return this.images.includes(this._ext(n)) },
+            isDisplayImage(n) { return this.displayImages.includes(this._ext(n)) },
             isVideo(n) { return this.videos.includes(this._ext(n)) },
             isAudio(n) { return this.audios.includes(this._ext(n)) },
-            emoji(n) {
-                if (this.isImage(n)) return '🖼';
-                if (this.isVideo(n)) return '🎬';
-                if (this.isAudio(n)) return '🎵';
-                return '📄';
+            iconSvg(n) {
+                if (this.isImage(n)) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="8" cy="8" r="2"></circle><path d="M21 15l-5-5L5 21"></path></svg>';
+                if (this.isVideo(n)) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="15" height="14" rx="2"></rect><path d="M17 10l5-3v10l-5-3z"></path></svg>';
+                if (this.isAudio(n)) return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>';
+                return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>';
             },
             iconClass(n) {
                 if (this.isImage(n)) return 'ic-img';
@@ -2950,17 +2961,54 @@
         };
 
         // Настройки по умолчанию
-        const DEF = { theme: 'dark', accent: 'blue', bg: 'pattern', fontSize: 'normal', lang: 'ru', pollInterval: 2, enterSend: true, folders: [] };
+        const APP_VERSION = '1.0.0';
+        const DEF = { theme: 'dark', accent: 'blue', bg: 'pattern', fontSize: 'normal', lang: 'ru', pollInterval: 2, enterSend: true, folders: [], useThemeAccentFromSettings: false };
         let settings = { ...DEF, ...Store.get('settings', {}) };
         if (!Array.isArray(settings.folders)) settings.folders = [];
         settings.pollInterval = parseInt(settings.pollInterval) || 2;
 
         // Локализация строк
-        function t(k) { return (I18N[settings.lang] || I18N.ru)[k] || k }
+        function activeI18n() {
+            return I18N;
+        }
+
+        function t(k) { return (activeI18n()[settings.lang] || I18N.ru)[k] || k }
+
+        function accentToHex(accent) {
+            const map = { blue: '#5288c1', green: '#43a047', purple: '#7e57c2', red: '#e53935', orange: '#fb8c00', pink: '#ec407a', teal: '#00897b', amber: '#ffb300' };
+            return map[accent] || map.blue;
+        }
+
+        function alphaColor(color, alpha = 1) {
+            if (!color) return `rgba(0, 0, 0, ${alpha})`;
+            const c = color.trim();
+            if (c.startsWith('#')) {
+                let hex = c.slice(1);
+                if (hex.length === 3) hex = hex.split('').map(ch => ch + ch).join('');
+                if (hex.length === 6) {
+                    const r = parseInt(hex.slice(0, 2), 16);
+                    const g = parseInt(hex.slice(2, 4), 16);
+                    const b = parseInt(hex.slice(4, 6), 16);
+                    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                }
+            }
+            if (c.startsWith('rgb(')) {
+                const vals = c.replace('rgb(', '').replace(')', '').split(',').map(v => v.trim());
+                if (vals.length === 3) return `rgba(${vals[0]}, ${vals[1]}, ${vals[2]}, ${alpha})`;
+            }
+            if (c.startsWith('rgba(')) {
+                return c.replace(/rgba\(([^)]+)\)/, (_, inner) => {
+                    const vals = inner.split(',').map(v => v.trim());
+                    return vals.length >= 3 ? `rgba(${vals[0]}, ${vals[1]}, ${vals[2]}, ${alpha})` : c;
+                });
+            }
+            return c;
+        }
 
         function applyI18n() {
             document.querySelectorAll('[data-t]').forEach(el => el.textContent = t(el.dataset.t));
             document.querySelectorAll('[data-tp]').forEach(el => el.placeholder = t(el.dataset.tp));
+            document.querySelectorAll('[data-tt]').forEach(el => el.title = t(el.dataset.tt));
         }
 
         /**
@@ -3082,6 +3130,10 @@
                 this.decodedCache = [];
                 this.isInitialLoad = true;
                 this.curFolder = 'all';
+                this.readState = Store.get('readState', {});
+                this._readSyncTimer = null;
+                this._readSyncInFlight = false;
+                this._mobileViewportBound = false;
                 this.emojis = {
                     smileys: ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', '🥵', '🥶', '😱', '😨', '😰', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦', '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕'],
                     animals: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦢', '🦉', '🦚', '🦜', '🐺', '🐗', '🐴', '🦄', '🐝', '🐛', '🦋', '🐌', '🐞', '🐜', '🦟', '🦗', '🕷', '🕸', '🦂', '🐢', '🐍', '🦎', '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🐘', '🦛', '🦏', '🐪', '🐫', '🦒', '🦘', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🐐', '🦌', '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐓', '🦃', '🦚', '🦜', '🦢', '🦩', '🕊', '🐇', '🦝', '🦨', '🦡', '🦦', '🦥', '🐁', '🐀', '🐿', '🦔'],
@@ -3112,6 +3164,108 @@
                     await this.gh.saveFile(data, null, res ? res.sha : null);
                     if (this.curChat && this.curChat.id === chatId) this.fetchMessages();
                 } catch (e) { console.error(e) }
+            }
+
+            getLastRead(chatId) {
+                const localRead = Store.get('lastRead_' + chatId, 0) || 0;
+                const cloudRead = this.readState?.[chatId] || 0;
+                return Math.max(localRead, cloudRead);
+            }
+
+            markChatRead(chatId, ts = Date.now(), sync = false) {
+                if (!chatId) return;
+                const prev = this.getLastRead(chatId);
+                if (ts <= prev) return;
+                Store.set('lastRead_' + chatId, ts);
+                this.readState[chatId] = ts;
+                Store.set('readState', this.readState);
+                if (sync) this.scheduleReadStateSync();
+            }
+
+            applyReadStateFromProfile(profile) {
+                if (!profile || typeof profile.lastRead !== 'object' || !profile.lastRead) return;
+                Object.entries(profile.lastRead).forEach(([chatId, ts]) => {
+                    const safeTs = Number(ts) || 0;
+                    if (safeTs > this.getLastRead(chatId)) {
+                        this.readState[chatId] = safeTs;
+                        Store.set('lastRead_' + chatId, safeTs);
+                    }
+                });
+                Store.set('readState', this.readState);
+            }
+
+            scheduleReadStateSync() {
+                clearTimeout(this._readSyncTimer);
+                this._readSyncTimer = setTimeout(() => this.syncReadStateToServer(), 1500);
+            }
+
+            async syncReadStateToServer() {
+                if (this._readSyncInFlight || !this.gh || !this.username) return;
+                this._readSyncInFlight = true;
+                try {
+                    const res = await this.gh.getFile('profiles.json');
+                    const profiles = res?.data || {};
+                    if (!profiles[this.username]) profiles[this.username] = {};
+                    const profile = profiles[this.username];
+                    profile.lastRead = { ...(profile.lastRead || {}), ...(this.readState || {}) };
+                    await this.gh.saveFile(profiles, 'profiles.json', res ? res.sha : null);
+                } catch (e) {
+                    console.warn('Failed to sync read state', e);
+                } finally {
+                    this._readSyncInFlight = false;
+                }
+            }
+
+            initMobileViewportFix() {
+                if (this._mobileViewportBound || !window.visualViewport) return;
+                this._mobileViewportBound = true;
+                const update = () => {
+                    const vv = window.visualViewport;
+                    if (!vv) return;
+                    const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+                    document.documentElement.style.setProperty('--kb-offset', `${Math.round(offset)}px`);
+                };
+                window.visualViewport.addEventListener('resize', update);
+                window.visualViewport.addEventListener('scroll', update);
+                window.addEventListener('orientationchange', () => setTimeout(update, 120));
+                document.addEventListener('focusout', () => setTimeout(update, 120));
+                update();
+            }
+
+            compareVersions(a, b) {
+                const pa = String(a || '0').split('.').map(x => parseInt(x, 10) || 0);
+                const pb = String(b || '0').split('.').map(x => parseInt(x, 10) || 0);
+                const len = Math.max(pa.length, pb.length);
+                for (let i = 0; i < len; i++) {
+                    const av = pa[i] || 0;
+                    const bv = pb[i] || 0;
+                    if (av > bv) return 1;
+                    if (av < bv) return -1;
+                }
+                return 0;
+            }
+
+            async checkForUpdates() {
+                try {
+                    if (!this.gh) return;
+                    const updRes = await this.gh.getFile('update.json');
+                    if (!updRes || !updRes.data) return;
+                    const upd = updRes.data;
+                    const remoteVersion = String(upd.version || '').trim();
+                    if (!remoteVersion) return;
+
+                    // Не показываем уведомление, если версии равны или локальная новее.
+                    if (this.compareVersions(remoteVersion, APP_VERSION) <= 0) return;
+
+                    const dismissed = Store.get('dismissedUpdateVersion', '');
+                    if (dismissed === remoteVersion) return;
+
+                    const note = upd.notes ? `\n${upd.notes}` : '';
+                    this.toast(`Доступно обновление ${remoteVersion}${note}`, 'info', 5500);
+                    Store.set('dismissedUpdateVersion', remoteVersion);
+                } catch (e) {
+                    console.warn('Update check failed', e);
+                }
             }
 
             async sendVoice(b64, ext, mime) {
@@ -3153,7 +3307,7 @@
                 });
                 
                 this.saveChats();
-                this.toast('💬 ' + (t('new_chat') + ': ' + name), 'success');
+                this.toast(t('new_chat') + ': ' + name, 'success');
                 this.selectChat(id);
                 this.sendSys(id, 'join');
             }
@@ -3189,7 +3343,8 @@
 
             applyCustomTheme(theme, isPreview = false, targetId = 'customThemeStyle') {
                 if (!theme || !theme.colors) return;
-                const c = theme.colors;
+                const c = { ...theme.colors };
+                if (settings.useThemeAccentFromSettings) c.accent = accentToHex(settings.accent);
                 const v = theme.visuals || {};
                 
                 const selector = isPreview ? '#themePreviewWin' : '[data-theme="custom"]';
@@ -3209,9 +3364,9 @@
                         --accent-dark: ${c.accent || '#00ff41'};
                         --red: ${c.danger || '#ff4444'};
                         --green: ${c.status_online || '#00ff41'};
-                        --sidebar-bg: ${c.bg_sidebar || '#0a0a0a'};
-                        --input-bg: ${c.bg_sidebar || '#0a0a0a'};
-                        --glass: ${c.bg_sidebar || '#0a0a0a'};
+                        --sidebar-bg: ${alphaColor(c.bg_sidebar || '#0a0a0a', .92)};
+                        --input-bg: ${alphaColor(c.bg_sidebar || '#0a0a0a', .95)};
+                        --glass: ${alphaColor(c.bg_sidebar || '#0a0a0a', .85)};
                         --bg-main: ${c.bg_main || '#000000'};
                         --bg-sidebar: ${c.bg_sidebar || '#0a0a0a'};
                         --bg-chat-active: ${c.bg_chat_active || '#1a1a1a'};
@@ -3247,7 +3402,7 @@
                     previewWin.innerHTML = `
                         <div class="preview-header">
                             <div class="preview-avatar" style="width:14px;height:14px"></div>
-                            <span style="flex:1">KiberCHAT</span>
+                            <span style="flex:1">${t('theme_preview_chat_name')}</span>
                         </div>
                         <div class="preview-body">
                             <div class="preview-sidebar">
@@ -3297,9 +3452,9 @@
                 if (!list) return;
                 
                 const stdThemes = [
-                    { id: 'dark', name: 'Dark', icon: '🌙', colors: ['#0e1621', '#17212b', '#242f3d', '#2b5278'] },
-                    { id: 'light', name: 'Light', icon: '☀️', colors: ['#e8ecf0', '#ffffff', '#dfe4ea', '#e3f2fd'] },
-                    { id: 'amoled', name: 'AMOLED', icon: '⚫', colors: ['#000000', '#0a0a0a', '#151515', '#1a3a5c'] }
+                    { id: 'dark', name: 'Dark', icon: 'D', colors: ['#0e1621', '#17212b', '#242f3d', '#2b5278'] },
+                    { id: 'light', name: 'Light', icon: 'L', colors: ['#e8ecf0', '#ffffff', '#dfe4ea', '#e3f2fd'] },
+                    { id: 'amoled', name: 'AMOLED', icon: 'A', colors: ['#000000', '#0a0a0a', '#151515', '#1a3a5c'] }
                 ];
                 
                 const customs = settings.customThemes || [];
@@ -3342,6 +3497,7 @@
                 const stdIds = ['dark', 'light', 'amoled'];
                 const customs = settings.customThemes || [];
                 const theme = customs.find(t => t.theme_id === id);
+                this.selectedThemeId = id;
                 
                 const items = $('themeManagerList').querySelectorAll('.theme-item');
                 items.forEach(item => item.classList.remove('active'));
@@ -3355,10 +3511,18 @@
                     $('detThemeAuthor').textContent = theme.author || 'Unknown';
                     this.applyCustomTheme(theme, true, 'previewStyle');
                     
-                    $('btnDeleteCustomTheme').onclick = () => this.deleteTheme(theme.theme_id);
+                    const btnDelete = $('btnDeleteCustomTheme');
+                    const btnExport = $('btnExportTheme');
+                    if (btnDelete) btnDelete.onclick = () => this.deleteTheme(theme.theme_id);
+                    if (btnExport) {
+                        btnExport.style.display = '';
+                        btnExport.onclick = () => this.exportTheme(theme.theme_id);
+                    }
                 } else {
                     $('themeDetails').style.display = 'none';
                     $('previewStyle')?.remove();
+                    const btnExport = $('btnExportTheme');
+                    if (btnExport) btnExport.style.display = 'none';
                 }
 
                 settings.theme = id;
@@ -3377,37 +3541,70 @@
                 this.renderThemeManager();
             }
 
-            async handleThemeImport(file) {
-                const reader = new FileReader();
-                reader.onload = async (e) => {
-                    try {
-                        const theme = JSON.parse(e.target.result);
-                        if (theme.theme_id && theme.colors) {
-                            if (!settings.customThemes) settings.customThemes = [];
-                            const idx = settings.customThemes.findIndex(t => t.theme_id === theme.theme_id);
-                            if (idx > -1) settings.customThemes[idx] = theme;
-                            else settings.customThemes.push(theme);
-                            
-                            settings.theme = theme.theme_id;
-                            Store.set('settings', settings);
-                            await this.updateProfileOnServer(); // Синхронизируем с GitHub
-                            this.applySettings();
-                            this.renderThemeManager();
-                            this.toast(t('settings_saved'), 'success');
-                        } else {
-                            this.toast(t('format_error'), 'error');
-                        }
-                    } catch (err) {
-                        this.toast(t('format_error'), 'error');
-                    }
+            renderLanguagePicker() {
+                const picker = $('langPicker');
+                if (!picker) return;
+                const builtIn = [{ id: 'ru', name: 'RU' }, { id: 'en', name: 'EN' }];
+                picker.innerHTML = builtIn.map(item => `<div class="theme-opt${settings.lang === item.id ? ' active' : ''}" data-lng="${item.id}">${esc(item.name)}</div>`).join('');
+                picker.querySelectorAll('[data-lng]').forEach(el => {
+                    el.onclick = e => {
+                        e.stopPropagation();
+                        picker.querySelectorAll('[data-lng]').forEach(x => x.classList.remove('active'));
+                        el.classList.add('active');
+                    };
+                });
+            }
+
+            generateAllEmojis() {
+                const out = [];
+                const hasProps = (() => {
+                    try { return /\p{Extended_Pictographic}/u.test('😀') } catch { return false }
+                })();
+                const seen = new Set();
+                const add = (e) => {
+                    if (!e || seen.has(e)) return;
+                    seen.add(e);
+                    out.push(e);
                 };
-                reader.readAsText(file);
+                const ranges = [
+                    [0x1F300, 0x1F5FF],
+                    [0x1F600, 0x1F64F],
+                    [0x1F680, 0x1F6FF],
+                    [0x1F700, 0x1F77F],
+                    [0x1F780, 0x1F7FF],
+                    [0x1F800, 0x1F8FF],
+                    [0x1F900, 0x1F9FF],
+                    [0x1FA00, 0x1FAFF],
+                    [0x2600, 0x26FF],
+                    [0x2700, 0x27BF]
+                ];
+                ranges.forEach(([from, to]) => {
+                    for (let cp = from; cp <= to; cp++) {
+                        const ch = String.fromCodePoint(cp);
+                        if (hasProps) {
+                            if (/\p{Extended_Pictographic}/u.test(ch)) add(ch);
+                        } else {
+                            add(ch);
+                        }
+                    }
+                });
+                [
+                    '👨‍👩‍👧‍👦', '👩‍💻', '👨‍💻', '🧑‍💻', '🧑‍🚀', '🧑‍🔬',
+                    '🏳️‍🌈', '🏳️‍⚧️', '👩‍❤️‍👩', '👨‍❤️‍👨', '👩‍❤️‍👨',
+                    '🧑‍🤝‍🧑', '👨‍👨‍👧', '👩‍👩‍👦', '👩‍🦰', '👨‍🦱',
+                    '❤️', '☀️', '☁️', '⭐', '⚽', '✈️', '⌚', '☎️'
+                ].forEach(add);
+                return out;
             }
  
             initEmojiPanel() {
                 const list = $('emojiList');
                 const tabs = document.querySelectorAll('.emoji-tab');
                 if (!list) return;
+
+                if (!this.emojis.all || !this.emojis.all.length) {
+                    this.emojis.all = this.generateAllEmojis();
+                }
                 
                 const renderCat = (cat) => {
                     list.innerHTML = this.emojis[cat].map(e => `<div class="emoji-item">${e}</div>`).join('');
@@ -3424,7 +3621,7 @@
                     };
                 });
 
-                renderCat('smileys');
+                renderCat('all');
             }
 
             toggleEmojiPanel() {
@@ -3523,6 +3720,7 @@
                                     this.userAvatar = p.avatar;
                                     Store.set('userAvatar', p.avatar);
                                 }
+                                this.applyReadStateFromProfile(p);
                             }
                         } catch (e) { console.warn('Silent sync failed at init', e); }
                         this.enterApp();
@@ -3570,6 +3768,7 @@
                             Store.set('settings', settings);
                             this.applySettings();
                         }
+                        this.applyReadStateFromProfile(p);
                     } else {
                         btn.disabled = false;
                         btnReg.disabled = false;
@@ -3628,9 +3827,11 @@
             enterApp() {
                 $('welcomeScreen').style.display = 'none';
                 $('mainApp').classList.add('active');
+                this.initMobileViewportFix();
                 this.updateSidebarUser();
                 this.renderChats();
                 this.startPoll();
+                this.checkForUpdates();
             }
 
             updateSidebarUser() {
@@ -3638,7 +3839,7 @@
                 if (this.userAvatar) {
                     el.innerHTML = `<img src="${this.userAvatar}" style="width:20px;height:20px;border-radius:50%;object-fit:cover"> ${esc(this.username)}`;
                 } else {
-                    el.textContent = '👤 ' + this.username;
+                    el.textContent = this.username;
                 }
             }
 
@@ -3666,10 +3867,6 @@
                 b('btnSettings', 'onclick', () => this.openSettings());
                 b('btnBack', 'onclick', () => $('mainApp')?.classList.remove('chat-open'));
                 b('emojiBtn', 'onclick', () => this.toggleEmojiPanel());
-                b('themeInput', 'onchange', e => {
-                    const file = e.target.files[0];
-                    if (file) this.handleThemeImport(file);
-                });
 
                 // Переключение табов в модалке добавления чата
                 b('tabCreateChat', 'onclick', () => this.switchAddChatTab('create'));
@@ -3850,6 +4047,9 @@
                 });
 
                 window.onfocus = () => this.fetchMessages();
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden) this.fetchMessages();
+                });
             }
 
             /**
@@ -3871,8 +4071,8 @@
                 } finally {
                     this._isPolling = false;
                     // Рекурсивный setTimeout вместо setInterval для предотвращения наложения
-                    // Минимальный интервал 500мс для стабильности, даже если просили 100мс
-                    const delay = Math.max(settings.pollInterval || 100, 500);
+                    // pollInterval хранится в секундах
+                    const delay = Math.max((Number(settings.pollInterval) || 2) * 1000, 1000);
                     this.poll = setTimeout(() => this._pollLoop(), delay);
                 }
             }
@@ -3895,6 +4095,7 @@
                         if (pRes && pRes.data) {
                             this.profilesCache = pRes.data;
                             Store.set('profiles_cache', pRes.data);
+                            this.applyReadStateFromProfile(pRes.data[this.username]);
                         }
                         this._lastProfileUpdate = Date.now();
                     }
@@ -3903,7 +4104,7 @@
                     Store.set('msgs_cache', newMsgs); // Сохраняем в кэш для оффлайн режима
 
                     if (this.curChat) {
-                        Store.set('lastRead_' + this.curChat.id, Date.now());
+                        this.markChatRead(this.curChat.id, Date.now(), true);
                         const sig = this.getSig();
                         if (sig !== this.lastSig) {
                             this.lastSig = sig;
@@ -4022,7 +4223,7 @@
                 $('hdrAvatar').style.background = this.curChat.color;
                 $('hdrName').textContent = this.curChat.name;
                 $('mainApp').classList.add('chat-open');
-                Store.set('lastRead_' + id, Date.now());
+                this.markChatRead(id, Date.now(), true);
                 $('msgWrap').innerHTML = '';
                 
                 const inputArea = $('inputArea');
@@ -4180,7 +4381,7 @@
                 this.renderFolders();
                 const el = $('chatsList');
                 if (!this.chats.length) {
-                    el.innerHTML = `<div class="empty-contacts"><div class="empty-icon">💬</div><p>${t('no_chats')}</p><p style="font-size:var(--fs-xs);opacity:.7;margin-top:6px">${t('add_hint')}</p></div>`;
+                    el.innerHTML = `<div class="empty-contacts"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:28px;height:28px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div><p>${t('no_chats')}</p><p style="font-size:var(--fs-xs);opacity:.7;margin-top:6px">${t('add_hint')}</p></div>`;
                     return;
                 }
 
@@ -4221,10 +4422,10 @@
                             if (p.del) continue;
                             const who = p.s === this.username ? t('you') : p.s;
                             let txt = p.m ? stripMd(p.m.replace(/\n/g, ' ')).slice(0, 50) : '';
-                            if (p.voice) txt = '🎤 ' + (settings.lang === 'ru' ? 'Голосовое сообщение' : 'Voice message');
+                            if (p.voice) txt = (settings.lang === 'ru' ? '[voice] Голосовое сообщение' : '[voice] Voice message');
                             else if (p.call) txt = '📞 ' + (p.call === 'start' ? t('incoming_call') : t('call_ended'));
-                            else if (p.f?.length) txt = txt ? `${EXT.emoji(p.f[0].n)} ${txt}` : `${EXT.emoji(p.f[0].n)} ${p.f[0].n}`;
-                            if (p.fw) txt = '↪️ ' + txt;
+                            else if (p.f?.length) txt = txt ? `[file] ${txt}` : `[file] ${p.f[0].n}`;
+                            if (p.fw) txt = '[fwd] ' + txt;
                             return { text: who + ': ' + txt, time: fmtTime(list[i].t) };
                         } catch { continue }
                     }
@@ -4234,7 +4435,7 @@
 
             getUnread(ch) {
                 try {
-                    const lr = Store.get('lastRead_' + ch.id, 0);
+                    const lr = this.getLastRead(ch.id);
                     return this.msgs.filter(m => m && m.ch === ch.id && m.t > lr).length;
                 } catch { return 0; }
             }
@@ -4390,18 +4591,18 @@
                 }
 
                 let content = '';
-                if (m.fw) content += `<div class="msg-forward-header">↪️ ${t('forwarded_from')} ${esc(m.fw.s)}</div>`;
+                if (m.fw) content += `<div class="msg-forward-header">${t('forwarded_from')} ${esc(m.fw.s)}</div>`;
                 if (m.replyId) {
                     const o = all.find(x => x.id === m.replyId);
-                    if (o) content += `<div class="msg-reply-quote"><div class="rq-name">${esc(o.sender)}</div><div class="rq-text">${esc((o.text || '📎').slice(0, 60))}</div></div>`;
+                    if (o) content += `<div class="msg-reply-quote"><div class="rq-name">${esc(o.sender)}</div><div class="rq-text">${esc((o.text || '[file]').slice(0, 60))}</div></div>`;
                 }
 
                 if (m.voice) {
                     content += `
                         <div class="voice-msg">
-                            <div class="voice-icon">🎤</div>
+                            <div class="voice-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 10a7 7 0 0 0 14 0"></path><path d="M12 19v3"></path></svg></div>
                             <div class="voice-player" data-path="${m.voice.p}" data-mime="${m.voice.t}">
-                                <div class="voice-play-btn" onclick="app.playVoice(this)">▶️</div>
+                                <div class="voice-play-btn" onclick="app.playVoice(this)"><svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M8 5v14l11-7z"></path></svg></div>
                                 <div class="voice-progress">
                                     <div class="voice-bar"></div>
                                 </div>
@@ -4410,7 +4611,27 @@
                 }
 
                 for (const f of m.files) content += this.renderFile(f);
-                if (m.text) content += `<div class="msg-text${m.files.length ? ' msg-caption' : ''}">${linkify(esc(m.text))}</div>`;
+                if (m.text) {
+                    const btns = [];
+                    const textWithTokens = m.text.replace(/gitogram:addchat(\{(?:[^{}]|(?:\{[^{}]*\}))*\})/g, (full, jsonStr) => {
+                        try {
+                            const chatData = JSON.parse(jsonStr);
+                            const chatName = (chatData.chat && chatData.chat.name) ? chatData.chat.name : t('new_chat');
+                            const safeStr = btoa(unescape(encodeURIComponent(jsonStr)));
+                            const token = `@@ADDCHATBTN${btns.length}@@`;
+                            btns.push(`<button class="inline-import-btn" onclick="app.handleTextImport('${safeStr}')">${t('import_chat')}: ${esc(chatName)}</button>`);
+                            return token;
+                        } catch (e) {
+                            return full;
+                        }
+                    });
+
+                    let renderedText = linkify(esc(textWithTokens));
+                    btns.forEach((htmlBtn, i) => {
+                        renderedText = renderedText.replace(`@@ADDCHATBTN${i}@@`, htmlBtn);
+                    });
+                    content += `<div class="msg-text${m.files.length ? ' msg-caption' : ''}">${renderedText}</div>`;
+                }
 
                 const pendingSvg = `<svg class="icon-pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
 
@@ -4425,18 +4646,18 @@
                 const bar = player.querySelector('.voice-bar');
 
                 if (btn.dataset.playing) {
-                    btn.textContent = '▶️';
+                    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M8 5v14l11-7z"></path></svg>';
                     delete btn.dataset.playing;
                     if (this._curAudio) { this._curAudio.pause(); this._curAudio = null; }
                     return;
                 }
 
                 try {
-                    btn.textContent = '⏳';
+                    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>';
                     const url = await this.getUrl(path);
                     const audio = new Audio(url);
                     this._curAudio = audio;
-                    btn.textContent = '⏸';
+                    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><rect x="6" y="5" width="4" height="14"></rect><rect x="14" y="5" width="4" height="14"></rect></svg>';
                     btn.dataset.playing = "1";
                     
                     audio.ontimeupdate = () => {
@@ -4444,14 +4665,14 @@
                         bar.style.width = p + '%';
                     };
                     audio.onended = () => {
-                        btn.textContent = '▶️';
+                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px"><path d="M8 5v14l11-7z"></path></svg>';
                         delete btn.dataset.playing;
                         bar.style.width = '0%';
                         this._curAudio = null;
                     };
                     audio.play();
                 } catch (e) {
-                    btn.textContent = '⚠️';
+                    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="m10.3 3.9-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3.1l-8-14a2 2 0 0 0-3.4 0z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>';
                     this.toast('Ошибка воспроизведения', 'error');
                 }
             }
@@ -4481,9 +4702,16 @@
 
             renderFile(f) {
                 const n = f.n, p = f.p;
-                let h = '';
-                h += `<div class="msg-file-card" onclick="app.dl('${esc(p)}','${esc(n)}')"><div class="file-icon ${EXT.iconClass(n)}">${EXT.emoji(n)}</div><div class="file-info"><div class="file-name">${esc(n)}</div><div class="file-size">${fmtSize(f.sz)}</div></div><div class="file-dl-icon">⬇</div></div>`;
-                return h;
+                if (EXT.isDisplayImage(n)) {
+                    return `<div class="msg-media"><img class="loading" data-path="${esc(p)}" alt="${esc(n)}" onclick="app.openLB('${esc(p)}')" title="${esc(n)}"></div>`;
+                }
+                if (EXT.isVideo(n)) {
+                    return `<div class="msg-media"><video controls preload="metadata" data-path="${esc(p)}"></video></div>`;
+                }
+                if (EXT.isAudio(n)) {
+                    return `<div class="msg-media"><audio controls preload="metadata" data-path="${esc(p)}"></audio></div>`;
+                }
+                return `<div class="msg-file-card" onclick="app.dl('${esc(p)}','${esc(n)}')"><div class="file-icon ${EXT.iconClass(n)}">${EXT.iconSvg(n)}</div><div class="file-info"><div class="file-name">${esc(n)}</div><div class="file-size">${fmtSize(f.sz)}</div></div><div class="file-dl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg></div></div>`;
             }
 
             getSenderColor(n) {
@@ -4568,9 +4796,9 @@
             setReply(m) {
                 this.cancelAction();
                 this.replyTo = m;
-                $('actionIcon').textContent = '↩️';
+                $('actionIcon').textContent = 'RE';
                 $('actionTitle').textContent = t('replying_to') + ' ' + m.sender;
-                $('actionText').textContent = m.text || '📎';
+                $('actionText').textContent = m.text || '[file]';
                 $('actionBar').classList.add('active');
 
                 // Если это канал и мы не админ, показываем поле ввода для ответа
@@ -4585,7 +4813,7 @@
             setEdit(m) {
                 this.cancelAction();
                 this.editingMsg = m;
-                $('actionIcon').textContent = '✏️';
+                $('actionIcon').textContent = 'EDIT';
                 $('actionTitle').textContent = t('editing');
                 $('actionText').textContent = m.text;
                 $('actionBar').classList.add('active');
@@ -4656,7 +4884,7 @@
                         await this.gh.saveFile(data, null, res ? res.sha : null);
                         this.msgs = data.messages;
                         this.renderChats();
-                        this.toast('↪️', 'success');
+                        this.toast(t('forward'), 'success');
                         return;
                     } catch { await sleep(500) }
                 }
@@ -4684,7 +4912,7 @@
                 const bar = $('filePreviewBar');
                 bar.innerHTML = this.pendingFiles.map((f, i) => `
                     <div class="fp-item">
-                        <div class="fp-thumb">${EXT.emoji(f.name)}</div>
+                        <div class="fp-thumb">${EXT.iconSvg(f.name)}</div>
                         <span class="fp-name">${esc(f.name)}</span>
                         <button class="fp-remove" onclick="app.removeFile(${i})">✕</button>
                     </div>`).join('');
@@ -4789,7 +5017,7 @@
                         
                         // После успешной отправки обновляем список сообщений
                         this.msgs = tr; 
-                        Store.set('lastRead_' + this.curChat.id, Date.now());
+                        this.markChatRead(this.curChat.id, Date.now(), true);
                         this.lastSig = this.getSig(); 
                         this.smartUpdate(); 
                         this.renderChats(); 
@@ -4869,7 +5097,7 @@
                 if (!this.curChat) return;
                 navigator.clipboard.writeText(this.curChat.key).then(() => {
                     $('btnCopyKey').textContent = t('copied');
-                    setTimeout(() => $('btnCopyKey').textContent = '📋', 2000);
+                    setTimeout(() => $('btnCopyKey').textContent = t('copy_key_btn'), 2000);
                 });
             }
 
@@ -4918,14 +5146,16 @@
                 }
 
                 // Выбор языка
-                $('langPicker').querySelectorAll('[data-lng]').forEach(el => {
-                    el.classList.toggle('active', el.dataset.lng === settings.lang);
-                    el.onclick = e => {
+                this.renderLanguagePicker();
+
+                const toggleThemeAccentFromSettings = $('toggleThemeAccentFromSettings');
+                if (toggleThemeAccentFromSettings) {
+                    toggleThemeAccentFromSettings.classList.toggle('on', !!settings.useThemeAccentFromSettings);
+                    toggleThemeAccentFromSettings.onclick = e => {
                         e.stopPropagation();
-                        $('langPicker').querySelectorAll('[data-lng]').forEach(x => x.classList.remove('active'));
-                        el.classList.add('active');
-                    }
-                });
+                        toggleThemeAccentFromSettings.classList.toggle('on');
+                    };
+                }
 
                 // Акцентные цвета
                 const accents = ['blue', 'green', 'purple', 'red', 'orange', 'pink', 'teal', 'amber'];
@@ -4944,16 +5174,16 @@
 
                 // Фоновые узоры
                 const bgs = [
-                    { id: 'pattern', icon: '🔳' },
-                    { id: 'circles', icon: '🔵' },
-                    { id: 'waves', icon: '🌊' },
-                    { id: 'stars', icon: '✨' },
-                    { id: 'circuit', icon: '⚡' },
-                    { id: 'hearts', icon: '💖' },
-                    { id: 'leaves', icon: '🍃' },
-                    { id: 'mountains', icon: '⛰️' },
-                    { id: 'bubbles', icon: '🫧' },
-                    { id: 'none', icon: '⬛' }
+                    { id: 'pattern', icon: 'P' },
+                    { id: 'circles', icon: 'C' },
+                    { id: 'waves', icon: 'W' },
+                    { id: 'stars', icon: 'S' },
+                    { id: 'circuit', icon: 'E' },
+                    { id: 'hearts', icon: 'H' },
+                    { id: 'leaves', icon: 'L' },
+                    { id: 'mountains', icon: 'M' },
+                    { id: 'bubbles', icon: 'B' },
+                    { id: 'none', icon: 'N' }
                 ];
                 const bgPicker = $('bgPicker');
                 if (bgPicker) {
@@ -5051,6 +5281,7 @@
                 settings.bg = getVal('bgPicker', '.active', 'bg') || settings.bg || 'pattern';
                 settings.fontSize = getVal('fontPicker', '.active', 'fnt') || settings.fontSize || 'normal';
                 settings.lang = getVal('langPicker', '.active', 'lng') || settings.lang || 'ru';
+                settings.useThemeAccentFromSettings = $('toggleThemeAccentFromSettings')?.classList.contains('on') || false;
                 
                 const tfPicker = $('timeFormatPicker');
                 if (tfPicker) settings.timeFormat = tfPicker.querySelector('.active')?.dataset.tf || '24h';
@@ -5081,6 +5312,7 @@
                     profiles[this.username].avatar = this.userAvatar;
                     profiles[this.username].chats = this.chats;
                     profiles[this.username].settings = settings;
+                    profiles[this.username].lastRead = { ...(profiles[this.username].lastRead || {}), ...(this.readState || {}) };
                     
                     await this.gh.saveFile(profiles, 'profiles.json', res ? res.sha : null);
                 } catch (e) { console.error('Failed to sync profile to GitHub', e) }
@@ -5093,8 +5325,6 @@
                 const el = $(id);
                 if (!el) return;
                 el.classList.add('active');
-                const i = el.querySelector('input');
-                if (i) setTimeout(() => i.focus(), 100);
             }
 
             closeModal(id) { 
